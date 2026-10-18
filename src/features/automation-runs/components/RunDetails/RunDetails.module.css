@@ -1,0 +1,160 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  background: rgb(15 23 42 / 40%);
+}
+
+.drawer {
+  display: flex;
+  flex-direction: column;
+  width: min(440px, 100%);
+  height: 100%;
+  background: #ffffff;
+  box-shadow: -8px 0 32px rgb(15 23 42 / 10%);
+  animation: slideIn 0.2s ease-out;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.title {
+  margin: 0;
+  color: #0f172a;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 24px;
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.runName {
+  margin: 0;
+  color: #0f172a;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.status {
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.success {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.failed {
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.running {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 28px 0 0;
+}
+
+.detailRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detailRow dt {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.detailRow dd {
+  margin: 0;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .drawer {
+    width: 100%;
+  }
+
+  .header {
+    padding: 20px 16px;
+  }
+
+  .content {
+    padding: 24px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer {
+    animation: none;
+  }
+}

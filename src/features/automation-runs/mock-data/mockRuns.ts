@@ -202,3 +202,4 @@ export const mockRuns: AutomationRun[] = [
     duration: 155000,
   },
 ];
+// export const mockRuns: AutomationRun[] = [];

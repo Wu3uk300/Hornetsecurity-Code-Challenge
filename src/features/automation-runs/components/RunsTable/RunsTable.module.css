@@ -68,6 +68,9 @@
   color: #0f172a !important;
   font-weight: 600;
 }
+.row:hover {
+  cursor: pointer;
+}
 
 .status {
   display: inline-flex;

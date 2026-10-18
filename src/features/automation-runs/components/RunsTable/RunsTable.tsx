@@ -7,6 +7,7 @@ type RunsTableProps = {
   sortField: SortField;
   sortDirection: SortDirection;
   onSort: (field: SortField) => void;
+  onSelectRun: (run: AutomationRun) => void;
 };
 
 const statusLabels: Record<AutomationRun['status'], string> = {
@@ -31,7 +32,7 @@ function formatTimestamp(timestamp: string): string {
   }).format(new Date(timestamp));
 }
 
-export function RunsTable({ runs, sortField, sortDirection, onSort }: RunsTableProps) {
+export function RunsTable({ runs, sortField, sortDirection, onSort, onSelectRun }: RunsTableProps) {
   function renderSortHeader(field: SortField, label: string) {
     const isActive = sortField === field;
 
@@ -76,7 +77,7 @@ export function RunsTable({ runs, sortField, sortDirection, onSort }: RunsTableP
 
           <tbody>
             {runs.map((run) => (
-              <tr key={run.id}>
+              <tr key={run.id} className={styles.row} onClick={() => onSelectRun(run)}>
                 <td className={styles.name}>{run.name}</td>
 
                 <td>{run.application}</td>

@@ -7,13 +7,16 @@ import { RunsTable } from './components/RunsTable/RunsTable';
 import { Pagination } from './components/Pagination/Pagination';
 import { StatusFilter, type StatusFilterValue } from './components/StatusFilter/StatusFilter';
 import { sortRuns, type SortField, type SortDirection } from './utils/sortRuns';
+import { RunsState } from './components/RunsState/RunsState';
+import { RunDetails } from './components/RunDetails/RunDetails';
+import type { AutomationRun } from './types/automationRun';
 import styles from './AutomationRunsDashboard.module.css';
 
 const PAGE_SIZE = 10;
 
 export function AutomationRunsDashboard() {
   //DATA
-  const { runs, isLoading, error } = useAutomationRuns();
+  const { runs, isLoading, error, refetch } = useAutomationRuns();
 
   //State
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,6 +24,7 @@ export function AutomationRunsDashboard() {
   const [statusFilter, setStatusFilter] = useState<StatusFilterValue>('all');
   const [sortField, setSortField] = useState<SortField>('timestamp');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const [selectedRun, setSelectedRun] = useState<AutomationRun | null>(null);
 
   //Derived DATA
   const normalizedQuery = searchQuery.trim().toLowerCase();
@@ -68,11 +72,11 @@ export function AutomationRunsDashboard() {
 
       <div className={styles.content}>
         {isLoading ? (
-          <p role="status">Loading automation runs...</p>
+          <RunsState state="loading" />
         ) : error ? (
-          <p role="alert">{error}</p>
+          <RunsState state="error" onRetry={refetch} />
         ) : runs.length === 0 ? (
-          <p>No automation runs found.</p>
+          <RunsState state="empty" />
         ) : (
           <>
             <StatsOverview runs={runs} />
@@ -92,6 +96,7 @@ export function AutomationRunsDashboard() {
                   sortField={sortField}
                   sortDirection={sortDirection}
                   onSort={handleSort}
+                  onSelectRun={setSelectedRun}
                 />
 
                 <Pagination
@@ -105,6 +110,7 @@ export function AutomationRunsDashboard() {
           </>
         )}
       </div>
+      {selectedRun && <RunDetails run={selectedRun} onClose={() => setSelectedRun(null)} />}
     </main>
   );
 }

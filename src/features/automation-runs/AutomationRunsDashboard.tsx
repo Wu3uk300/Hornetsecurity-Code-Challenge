@@ -3,9 +3,14 @@ import styles from './AutomationRunsDashboard.module.css';
 import { DashboardHeader } from './components/DashboardHeader/DashboardHeader';
 import { StatsOverview } from './components/StatsOverview/StatsOverview';
 import { RunsTable } from './components/RunsTable/RunsTable';
+import { Pagination } from './components/Pagination/Pagination';
+import { useState } from 'react';
 export function AutomationRunsDashboard() {
   const { runs, isLoading, error } = useAutomationRuns();
-
+  const PAGE_SIZE = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const paginatedRuns = runs.slice(startIndex, startIndex + PAGE_SIZE);
   return (
     <main className={styles.dashboard}>
       <DashboardHeader />
@@ -20,7 +25,13 @@ export function AutomationRunsDashboard() {
         ) : (
           <>
             <StatsOverview runs={runs} />
-            <RunsTable runs={runs} />
+            <RunsTable runs={paginatedRuns} />
+            <Pagination
+              currentPage={currentPage}
+              totalItems={runs.length}
+              pageSize={PAGE_SIZE}
+              onPageChange={setCurrentPage}
+            />
           </>
         )}
       </div>

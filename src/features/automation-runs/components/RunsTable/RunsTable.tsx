@@ -13,7 +13,7 @@ const statusLabels: Record<AutomationRun['status'], string> = {
 
 function formatDuration(duration: number | null): string {
   if (duration === null) {
-    return '—';
+    return '-';
   }
 
   return `${(duration / 1000).toFixed(1)}s`;
@@ -69,7 +69,7 @@ export function RunsTable({ runs }: RunsTableProps) {
                   {run.status === 'failed' ? (
                     <span className={styles.pendingAction}>Retry</span>
                   ) : (
-                    <span className={styles.muted}>—</span>
+                    <span className={styles.muted}>-</span>
                   )}
                 </td>
               </tr>

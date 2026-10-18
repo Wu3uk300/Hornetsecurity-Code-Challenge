@@ -38,7 +38,7 @@ export function StatsOverview({ runs }: StatsOverviewProps) {
       <article className={styles.card}>
         <h2 className={styles.label}>Average Duration</h2>
         <p className={styles.value}>
-          {averageDuration === null ? '—' : `${averageDuration.toFixed(1)}s`}
+          {averageDuration === null ? '-' : `${averageDuration.toFixed(1)}s`}
         </p>
       </article>
 

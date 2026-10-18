@@ -1,8 +1,12 @@
 import type { AutomationRun } from '../../types/automationRun';
+import type { SortField, SortDirection } from '../../utils/sortRuns';
 import styles from './RunsTable.module.css';
 
 type RunsTableProps = {
   runs: AutomationRun[];
+  sortField: SortField;
+  sortDirection: SortDirection;
+  onSort: (field: SortField) => void;
 };
 
 const statusLabels: Record<AutomationRun['status'], string> = {
@@ -27,7 +31,26 @@ function formatTimestamp(timestamp: string): string {
   }).format(new Date(timestamp));
 }
 
-export function RunsTable({ runs }: RunsTableProps) {
+export function RunsTable({ runs, sortField, sortDirection, onSort }: RunsTableProps) {
+  function renderSortHeader(field: SortField, label: string) {
+    const isActive = sortField === field;
+
+    return (
+      <th
+        scope="col"
+        aria-sort={isActive ? (sortDirection === 'asc' ? 'ascending' : 'descending') : undefined}
+      >
+        <button type="button" className={styles.sortButton} onClick={() => onSort(field)}>
+          {label}
+
+          <span className={styles.sortIcon} aria-hidden="true">
+            {isActive ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}
+          </span>
+        </button>
+      </th>
+    );
+  }
+
   return (
     <section className={styles.section} aria-labelledby="runs-heading">
       <div className={styles.header}>
@@ -42,11 +65,11 @@ export function RunsTable({ runs }: RunsTableProps) {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Application</th>
-              <th scope="col">Status</th>
-              <th scope="col">Timestamp</th>
-              <th scope="col">Duration</th>
+              {renderSortHeader('name', 'Name')}
+              {renderSortHeader('application', 'Application')}
+              {renderSortHeader('status', 'Status')}
+              {renderSortHeader('timestamp', 'Timestamp')}
+              {renderSortHeader('duration', 'Duration')}
               <th scope="col">Action</th>
             </tr>
           </thead>
@@ -55,16 +78,21 @@ export function RunsTable({ runs }: RunsTableProps) {
             {runs.map((run) => (
               <tr key={run.id}>
                 <td className={styles.name}>{run.name}</td>
+
                 <td>{run.application}</td>
+
                 <td>
                   <span className={`${styles.status} ${styles[run.status]}`}>
                     {statusLabels[run.status]}
                   </span>
                 </td>
+
                 <td>
                   <time dateTime={run.timestamp}>{formatTimestamp(run.timestamp)}</time>
                 </td>
+
                 <td>{formatDuration(run.duration)}</td>
+
                 <td>
                   {run.status === 'failed' ? (
                     <span className={styles.pendingAction}>Retry</span>

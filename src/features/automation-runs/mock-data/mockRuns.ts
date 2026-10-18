@@ -180,7 +180,7 @@ export const mockRuns: AutomationRun[] = [
   {
     id: 'run-023',
     name: 'Monthly KPI Aggregation',
-    application: 'Power BI',
+    application: 'Email',
     status: 'success',
     timestamp: '2026-10-11T16:45:00Z',
     duration: 275000,

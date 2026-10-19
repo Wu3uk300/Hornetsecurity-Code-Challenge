@@ -11,18 +11,20 @@ import { RunsState } from './components/RunsState/RunsState';
 import { RunDetails } from './components/RunDetails/RunDetails';
 import type { AutomationRun } from './types/automationRun';
 import styles from './AutomationRunsDashboard.module.css';
+import { Toast } from './components/Toast/Toast';
 
 const PAGE_SIZE = 10;
 
 export function AutomationRunsDashboard() {
   //DATA
-  const { runs, isLoading, error, refetch } = useAutomationRuns();
+  const { runs, isLoading, error, refetch, retryRun, retryingRunId, retryError, clearRetryError } =
+    useAutomationRuns();
 
   //State
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilterValue>('all');
-  const [sortField, setSortField] = useState<SortField>('timestamp');
+  const [sortField, setSortField] = useState<SortField>('created_at');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [selectedRun, setSelectedRun] = useState<AutomationRun | null>(null);
 
@@ -97,6 +99,8 @@ export function AutomationRunsDashboard() {
                   sortDirection={sortDirection}
                   onSort={handleSort}
                   onSelectRun={setSelectedRun}
+                  onRetry={retryRun}
+                  retryingRunId={retryingRunId}
                 />
 
                 <Pagination
@@ -110,7 +114,15 @@ export function AutomationRunsDashboard() {
           </>
         )}
       </div>
-      {selectedRun && <RunDetails run={selectedRun} onClose={() => setSelectedRun(null)} />}
+      {selectedRun && (
+        <RunDetails
+          run={runs.find((run) => run.id === selectedRun.id) ?? selectedRun}
+          onClose={() => setSelectedRun(null)}
+          onRetry={retryRun}
+          retryingRunId={retryingRunId}
+        />
+      )}
+      {retryError && <Toast message={retryError} onClose={clearRetryError} />}
     </main>
   );
 }

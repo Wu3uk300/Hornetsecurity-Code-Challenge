@@ -1,10 +1,15 @@
 export type AutomationStatus = 'success' | 'failed' | 'running';
 
 export type AutomationRun = {
-  id: string;
+  id: number;
   name: string;
   application: string;
   status: AutomationStatus;
-  timestamp: string;
-  duration: number | null;
+  created_at: string;
+  duration_ms: number | null;
+};
+
+export type RetryResponse = {
+  id: number;
+  status: 'running';
 };

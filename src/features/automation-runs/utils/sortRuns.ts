@@ -1,6 +1,6 @@
 import type { AutomationRun } from '../types/automationRun';
 
-export type SortField = 'name' | 'application' | 'status' | 'timestamp' | 'duration';
+export type SortField = 'name' | 'application' | 'status' | 'created_at' | 'duration_ms';
 
 export type SortDirection = 'asc' | 'desc';
 

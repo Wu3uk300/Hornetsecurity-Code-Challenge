@@ -12,7 +12,7 @@ const stateContent = {
   },
   error: {
     title: 'Unable to load automation runs',
-    description: 'Something went wrong while loading the data',
+    description: 'Automation runs could not be loaded',
   },
   empty: {
     title: 'No automation runs yet',

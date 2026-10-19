@@ -8,6 +8,8 @@ type RunsTableProps = {
   sortDirection: SortDirection;
   onSort: (field: SortField) => void;
   onSelectRun: (run: AutomationRun) => void;
+  onRetry: (id: number) => void;
+  retryingRunId: number | null;
 };
 
 const statusLabels: Record<AutomationRun['status'], string> = {
@@ -32,7 +34,15 @@ function formatTimestamp(timestamp: string): string {
   }).format(new Date(timestamp));
 }
 
-export function RunsTable({ runs, sortField, sortDirection, onSort, onSelectRun }: RunsTableProps) {
+export function RunsTable({
+  runs,
+  sortField,
+  sortDirection,
+  onSort,
+  onSelectRun,
+  onRetry,
+  retryingRunId,
+}: RunsTableProps) {
   function renderSortHeader(field: SortField, label: string) {
     const isActive = sortField === field;
 
@@ -69,8 +79,8 @@ export function RunsTable({ runs, sortField, sortDirection, onSort, onSelectRun 
               {renderSortHeader('name', 'Name')}
               {renderSortHeader('application', 'Application')}
               {renderSortHeader('status', 'Status')}
-              {renderSortHeader('timestamp', 'Timestamp')}
-              {renderSortHeader('duration', 'Duration')}
+              {renderSortHeader('created_at', 'Timestamp')}
+              {renderSortHeader('duration_ms', 'Duration')}
               <th scope="col">Action</th>
             </tr>
           </thead>
@@ -89,14 +99,25 @@ export function RunsTable({ runs, sortField, sortDirection, onSort, onSelectRun 
                 </td>
 
                 <td>
-                  <time dateTime={run.timestamp}>{formatTimestamp(run.timestamp)}</time>
+                  <time dateTime={run.created_at}>{formatTimestamp(run.created_at)}</time>
                 </td>
 
-                <td>{formatDuration(run.duration)}</td>
+                <td>{formatDuration(run.duration_ms)}</td>
 
                 <td>
                   {run.status === 'failed' ? (
-                    <span className={styles.pendingAction}>Retry</span>
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        onRetry(run.id);
+                      }}
+                      disabled={retryingRunId !== null}
+                      aria-label={`Retry ${run.name}`}
+                      className={styles.retryButton}
+                    >
+                      {retryingRunId === run.id ? 'Retrying...' : 'Retry'}
+                    </button>
                   ) : (
                     <span className={styles.muted}>-</span>
                   )}

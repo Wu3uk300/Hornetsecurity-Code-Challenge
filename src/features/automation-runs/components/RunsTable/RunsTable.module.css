@@ -133,6 +133,36 @@
   font-size: 14px;
 }
 
+.retryButton {
+  padding: 7px 14px;
+  border: 1px solid #c7d7f0;
+  border-radius: 6px;
+  background-color: #f5f8ff;
+  color: #2563eb;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.retryButton:hover:not(:disabled) {
+  background-color: #e8f0ff;
+  border-color: #93b4ee;
+}
+
+.retryButton:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.retryButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 @media (max-width: 640px) {
   .header {
     padding: 20px 16px;

@@ -5,6 +5,8 @@ import styles from './RunDetails.module.css';
 type RunDetailsProps = {
   run: AutomationRun;
   onClose: () => void;
+  onRetry: (id: number) => void;
+  retryingRunId: number | null;
 };
 
 const statusLabels: Record<AutomationRun['status'], string> = {
@@ -25,7 +27,7 @@ function formatTimestamp(timestamp: string): string {
   }).format(new Date(timestamp));
 }
 
-export function RunDetails({ run, onClose }: RunDetailsProps) {
+export function RunDetails({ run, onClose, onRetry, retryingRunId }: RunDetailsProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -114,19 +116,30 @@ export function RunDetails({ run, onClose }: RunDetailsProps) {
             <div className={styles.detailRow}>
               <dt>Timestamp</dt>
               <dd>
-                <time dateTime={run.timestamp}>{formatTimestamp(run.timestamp)}</time>
+                <time dateTime={run.created_at}>{formatTimestamp(run.created_at)}</time>
               </dd>
             </div>
 
             <div className={styles.detailRow}>
               <dt>Duration</dt>
-              <dd>{formatDuration(run.duration)}</dd>
+              <dd>{formatDuration(run.duration_ms)}</dd>
             </div>
 
             <div className={styles.detailRow}>
               <dt>Run ID</dt>
               <dd>{run.id}</dd>
             </div>
+
+            {run.status === 'failed' && (
+              <button
+                type="button"
+                className={styles.retryButton}
+                onClick={() => onRetry(run.id)}
+                disabled={retryingRunId !== null}
+              >
+                {retryingRunId === run.id ? 'Retrying...' : 'Retry'}
+              </button>
+            )}
           </dl>
         </div>
       </aside>

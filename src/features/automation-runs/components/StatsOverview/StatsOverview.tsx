@@ -13,7 +13,7 @@ export function StatsOverview({ runs }: StatsOverviewProps) {
   const successRate = totalRuns > 0 ? Math.round((successfulRuns / totalRuns) * 100) : 0;
 
   const completedDurations = runs
-    .map((run) => run.duration)
+    .map((run) => run.duration_ms)
     .filter((duration) => duration !== null);
 
   const averageDuration =

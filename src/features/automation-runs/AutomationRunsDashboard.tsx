@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useAutomationRuns } from './hooks/useAutomationRuns';
 import { DashboardHeader } from './components/DashboardHeader/DashboardHeader';
 import { StatsOverview } from './components/StatsOverview/StatsOverview';
@@ -9,9 +9,10 @@ import { StatusFilter, type StatusFilterValue } from './components/StatusFilter/
 import { sortRuns, type SortField, type SortDirection } from './utils/sortRuns';
 import { RunsState } from './components/RunsState/RunsState';
 import { RunDetails } from './components/RunDetails/RunDetails';
+import { RunsSkeleton } from './components/RunsSkeleton/RunsSkeleton';
+import { Toast } from './components/Toast/Toast';
 import type { AutomationRun } from './types/automationRun';
 import styles from './AutomationRunsDashboard.module.css';
-import { Toast } from './components/Toast/Toast';
 
 const PAGE_SIZE = 10;
 
@@ -67,6 +68,9 @@ export function AutomationRunsDashboard() {
 
     setCurrentPage(1);
   }
+  const handleCloseDetails = useCallback(() => {
+    setSelectedRun(null);
+  }, []);
 
   return (
     <main className={styles.dashboard}>
@@ -74,8 +78,9 @@ export function AutomationRunsDashboard() {
 
       <div className={styles.content}>
         {isLoading ? (
-          <RunsState state="loading" />
-        ) : error ? (
+          <RunsSkeleton />
+        ) : // <RunsState state="loading" />
+        error ? (
           <RunsState state="error" onRetry={refetch} />
         ) : runs.length === 0 ? (
           <RunsState state="empty" />
@@ -117,7 +122,7 @@ export function AutomationRunsDashboard() {
       {selectedRun && (
         <RunDetails
           run={runs.find((run) => run.id === selectedRun.id) ?? selectedRun}
-          onClose={() => setSelectedRun(null)}
+          onClose={handleCloseDetails}
           onRetry={retryRun}
           retryingRunId={retryingRunId}
         />

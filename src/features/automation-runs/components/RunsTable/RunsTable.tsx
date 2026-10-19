@@ -87,7 +87,21 @@ export function RunsTable({
 
           <tbody>
             {runs.map((run) => (
-              <tr key={run.id} className={styles.row} onClick={() => onSelectRun(run)}>
+              <tr
+                key={run.id}
+                className={styles.row}
+                tabIndex={0}
+                aria-label={`View details for ${run.name}`}
+                onClick={() => onSelectRun(run)}
+                onKeyDown={(event) => {
+                  if (event.target !== event.currentTarget) return;
+
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    onSelectRun(run);
+                  }
+                }}
+              >
                 <td className={styles.name}>{run.name}</td>
 
                 <td>{run.application}</td>

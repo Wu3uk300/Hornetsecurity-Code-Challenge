@@ -3,9 +3,7 @@ import { AutomationRunsDashboard } from '../features/automation-runs/AutomationR
 function App() {
   return (
     <>
-      <main>
-        <AutomationRunsDashboard />
-      </main>
+      <AutomationRunsDashboard />
     </>
   );
 }

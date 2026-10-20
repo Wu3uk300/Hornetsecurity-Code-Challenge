@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useAutomationRuns } from './hooks/useAutomationRuns';
 import { DashboardHeader } from './components/DashboardHeader/DashboardHeader';
 import { StatsOverview } from './components/StatsOverview/StatsOverview';

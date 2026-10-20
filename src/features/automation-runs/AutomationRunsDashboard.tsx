@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useAutomationRuns } from './hooks/useAutomationRuns';
 import { DashboardHeader } from './components/DashboardHeader/DashboardHeader';
 import { StatsOverview } from './components/StatsOverview/StatsOverview';
@@ -32,17 +32,21 @@ export function AutomationRunsDashboard() {
   //Derived DATA
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
-  const searchedRuns = runs.filter(
-    (run) =>
-      run.name.toLowerCase().includes(normalizedQuery) ||
-      run.application.toLowerCase().includes(normalizedQuery),
-  );
+  const searchedRuns = useMemo(() => {
+    return runs.filter(
+      (run) =>
+        run.name.toLowerCase().includes(normalizedQuery) ||
+        run.application.toLowerCase().includes(normalizedQuery),
+    );
+  }, [runs, normalizedQuery]);
 
-  const filteredRuns = searchedRuns.filter(
-    (run) => statusFilter === 'all' || run.status === statusFilter,
-  );
+  const filteredRuns = useMemo(() => {
+    return searchedRuns.filter((run) => statusFilter === 'all' || run.status === statusFilter);
+  }, [searchedRuns, statusFilter]);
 
-  const sortedRuns = sortRuns(filteredRuns, sortField, sortDirection);
+  const sortedRuns = useMemo(() => {
+    return sortRuns(filteredRuns, sortField, sortDirection);
+  }, [filteredRuns, sortField, sortDirection]);
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const paginatedRuns = sortedRuns.slice(startIndex, startIndex + PAGE_SIZE);
@@ -68,9 +72,10 @@ export function AutomationRunsDashboard() {
 
     setCurrentPage(1);
   }
-  const handleCloseDetails = useCallback(() => {
+
+  const handleCloseDetails = () => {
     setSelectedRun(null);
-  }, []);
+  };
 
   return (
     <main className={styles.dashboard}>
